@@ -1,0 +1,68 @@
+{
+    "username": "admin",
+    "nickname": "",
+    "password": "ba3253876aed6bc22d4a6ff53d8406c6ad864195ed144ab5c87621b6c233b548baeae6956df346ec8c17f5ea10f35ee3cbc514797ed7ddd3145464e2a0bab413",
+    "jwtSecret": "I2vpM14xWYoJkqbnB4wEOA1v0t",
+    "roomSetting": {
+        "base": {
+            "name": "",
+            "description": "",
+            "gameMode": "",
+            "pvp": false,
+            "playerNum": 0,
+            "backDays": 0,
+            "vote": false,
+            "password": "",
+            "token": "",
+            "masterPort": 0,
+            "cavesPort": 0,
+            "clusterKey": "",
+            "shardMasterIp": "",
+            "shardMasterPort": 0,
+            "steamMasterPort": 0,
+            "steamAuthenticationPort": 0
+        },
+        "ground": "",
+        "cave": "",
+        "mod": ""
+    },
+    "multiHost": false,
+    "autoUpdate": {
+        "enable": false,
+        "time": "06:00:00"
+    },
+    "autoAnnounce": null,
+    "autoBackup": {
+        "enable": false,
+        "time": "05:55:00"
+    },
+    "players": null,
+    "statistics": null,
+    "keepalive": {
+        "enable": false,
+        "frequency": 30,
+        "lastTime": "",
+        "cavesLastTime": ""
+    },
+    "announcedID": 0,
+    "sysSetting": {
+        "schedulerSetting": {
+            "playerGetFrequency": 3000,
+            "UIDMaintain": {
+                "disable": false,
+                "frequency": 10
+            },
+            "sysMetricsGet": {
+                "disable": true,
+                "frequency": 0
+            }
+        }
+    },
+    "bit64": false,
+    "platform": "Microsoft Windows 10 Pro",
+    "tickRate": 15,
+    "encodeUserPath": {
+        "ground": false,
+        "cave": false
+    }
+}
