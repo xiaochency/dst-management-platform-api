@@ -14,7 +14,7 @@ cd ~ && wget  https://ghfast.top/https://raw.githubusercontent.com/xiaochency/ds
 sed -i 's/^PORT=.*/PORT=8080/' run.sh
 ```
 ```shell
-# 根据系统提示输入并回车
+# 执行脚本
 ./run.sh
 ```
 ## 安装启动DMP
@@ -42,7 +42,6 @@ sed -i 's/^PORT=.*/PORT=8080/' run.sh
 ├── dmp.log             # 请求日志
 ├── dmpProcess.log      # 运行日志
 ├── DstMP.sdb           # 数据库
-├── manual_install.sh   # 饥荒手动安装脚本
 └── run.sh              # 运行脚本
 ```
 
