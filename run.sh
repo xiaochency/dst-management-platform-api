@@ -277,7 +277,7 @@ function create_dstmp_config() {
     "announcedID": 0,
     "sysSetting": {
         "schedulerSetting": {
-            "playerGetFrequency": 300,
+            "playerGetFrequency": 600,
             "UIDMaintain": {
                 "disable": false,
                 "frequency": 10
