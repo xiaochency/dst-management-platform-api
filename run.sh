@@ -123,79 +123,6 @@ function check_glibc() {
     fi
 }
 
-# 下载函数:下载链接,尝试次数,超时时间(s)
-function download() {
-    local download_url="$1"
-    local tries="$2"
-    local timeout="$3"
-    local output_file="$4"  # 添加输出文件参数
-    
-    wget -q --show-progress --tries="$tries" --timeout="$timeout" -O "$output_file" "$download_url"
-    return $?
-}
-
-# 安装主程序
-function install_dmp() {
-    local download_urls=(
-        "https://gh-proxy.com/github.com/xiaochency/dst-management-platform-api/raw/refs/heads/main/dmp"
-        "https://ghfast.top/https://github.com/xiaochency/dst-management-platform-api/raw/refs/heads/main/dmp"
-    )
-    
-    # 检查 jq
-    if ! check_jq; then
-    echo_red "jq安装失败，请检查网络连接"
-    exit 1
-    fi
-    
-    echo_cyan "开始安装 DMP..."
-    
-    local download_success=false
-    local output_file="dmp"
-    
-    # 尝试多个镜像源
-    for url in "${download_urls[@]}"; do
-        echo_cyan "尝试从镜像源下载: $(basename "$url")"
-        
-        if download "$url" 3 15 "$output_file"; then
-            # 验证下载的文件
-            if [ -f "$output_file" ] && [ -s "$output_file" ]; then
-                # 检查是否是有效的可执行文件（至少要有可执行权限）
-                if head -c 4 "$output_file" | grep -q '^#!/'; then
-                    echo_cyan "检测到脚本文件头部"
-                fi
-                
-                # 设置执行权限
-                chmod 755 "$output_file"
-                
-                # 验证文件是否可执行
-                if [ -x "$output_file" ]; then
-                    echo_green "DMP 下载成功"
-                    download_success=true
-                    break
-                else
-                    echo_red "文件无法设置为可执行"
-                    rm -f "$output_file"
-                fi
-            else
-                echo_red "下载的文件无效或为空"
-                rm -f "$output_file"
-            fi
-        fi
-    done
-    
-    # 检查是否下载成功
-    if [ "$download_success" = false ]; then
-        echo_red "所有镜像源均下载失败"
-        
-        # 提供手动安装指南
-        echo_cyan "请尝试以下手动安装方法:"
-        echo_cyan "1. 访问 https://github.com/xiaochency/dst-management-platform-api"
-        echo_cyan "2. 手动下载 dmp 文件"
-        echo_cyan "3. 将文件保存到当前目录并运行: chmod +x dmp"
-        exit 1
-    fi
-}
-
 # 创建 DstMP.sdb 配置文件
 function create_dstmp_config() {
     local db_file="DstMP.sdb"
@@ -301,16 +228,163 @@ EOF
 chmod 755 "$db_file"
 }
 
+# 下载函数:下载链接,尝试次数,超时时间(s)
+function download() {
+    local download_url="$1"
+    local tries="$2"
+    local timeout="$3"
+    local output_file="$4"  # 添加输出文件参数
+    
+    wget -q --show-progress --tries="$tries" --timeout="$timeout" -O "$output_file" "$download_url"
+    return $?
+}
+
+# 安装主程序
+function install_dmp() {
+    local download_urls=(
+        "https://gh.llkk.cc/https://github.com/xiaochency/dst-management-platform-api/raw/refs/heads/main/dmp"
+        "https://github.dpik.top/https://github.com/xiaochency/dst-management-platform-api/raw/refs/heads/main/dmp"
+        "https://ghfast.top/https://github.com/xiaochency/dst-management-platform-api/raw/refs/heads/main/dmp"
+    )
+    
+    local mirror_names=(
+        "镜像源1 (gh.llkk.cc)"
+        "镜像源2 (github.dpik.top)" 
+        "镜像源3 (ghfast.top)"
+    )
+    
+    # 检查 jq
+    if ! check_jq; then
+    echo_red "jq安装失败，请检查网络连接"
+    exit 1
+    fi
+    
+    echo_cyan "开始安装 DMP..."
+    
+    # 检查当前目录下是否已存在dmp文件
+    if [ -e "dmp" ]; then
+        echo_yellow "检测到当前目录下已存在dmp文件，正在删除..."
+        rm -f "dmp"
+        echo_green "已删除现有dmp文件"
+    fi
+    
+    # 显示镜像源选择菜单
+    echo_cyan "请选择下载镜像源："
+    for i in "${!mirror_names[@]}"; do
+        echo_green "$((i+1)). ${mirror_names[i]}"
+    done
+    
+    local selected_mirror
+    while true; do
+        read -p "请输入选择 [1-3]: " selected_mirror
+        
+        case $selected_mirror in
+            1|2|3)
+                break
+                ;;
+            *)
+                echo_red "无效选择，请输入 1-3 之间的数字"
+                ;;
+        esac
+    done
+    
+    local download_success=false
+    local output_file="dmp"
+    
+    # 使用选择的镜像源
+    local mirror_index=$((selected_mirror-1))
+    echo_cyan "使用镜像源：${mirror_names[mirror_index]}"
+    echo_cyan "下载链接: ${download_urls[mirror_index]}"
+    
+    if download "${download_urls[mirror_index]}" 3 15 "$output_file"; then
+        echo_green "镜像源 $selected_mirror 下载成功"
+        download_success=true
+        chmod 755 dmp
+    else
+        echo_red "镜像源 $selected_mirror 下载失败"
+    fi
+}
+
 # 检查进程状态
 function check_dmp() {
     sleep 1
     if pgrep dmp >/dev/null; then
         echo_green "启动成功"
-        echo_green "请浏览器访问http://公网ip:80"
+        echo_green "请浏览器访问http://公网ip:端口"
+        echo_green "例如http://192.168.31.100:80"
+        echo_green "请执行选项4安装饥荒服务器"
     else
         echo_red "启动失败"
         exit 1
     fi
+}
+
+# 检查端口是否合法
+function check_port() {
+    local port="$1"
+    
+    # 检查是否为数字
+    if ! [[ "$port" =~ ^[0-9]+$ ]]; then
+        echo_red "端口号必须为数字"
+        return 1
+    fi
+    
+    # 检查端口范围
+    if [ "$port" -lt 1 ] || [ "$port" -gt 65535 ]; then
+        echo_red "端口号必须在 1-65535 范围内"
+        return 1
+    fi
+    
+    # 检查常见系统端口
+    if [ "$port" -lt 1024 ] && [ "$(whoami)" != "root" ]; then
+        echo_yellow "警告：使用 1-1023 范围内的端口需要 root 权限"
+    fi
+    
+    return 0
+}
+
+# 修改端口函数
+function change_port() {
+    echo_cyan "当前端口设置为: $PORT"
+    echo_cyan "请输入新的端口号 (1-65535):"
+    read -r new_port
+    
+    # 检查端口是否合法
+    if ! check_port "$new_port"; then
+        return 1
+    fi
+    
+    # 检查端口是否被占用
+    local port_used
+    port_used=$(ss -ltnp | awk -v port="${new_port}" '$4 ~ ":"port"$" {print $4}')
+    
+    if [ -n "$port_used" ]; then
+        echo_red "端口 $new_port 已被占用: $port_used"
+        echo_red "请选择其他端口"
+        return 1
+    fi
+    
+    # 更新端口设置
+    PORT=$new_port
+    echo_green "端口已成功修改为: $PORT"
+    echo_yellow "注意：修改端口后需要重启DMP服务才能生效"
+    
+    # 询问是否立即重启DMP
+    if pgrep dmp >/dev/null; then
+        echo_cyan "是否立即重启DMP服务以使新端口生效？(y/n):"
+        read -r restart_choice
+        if [[ "$restart_choice" == "y" || "$restart_choice" == "Y" ]]; then
+            echo_cyan "正在重启DMP服务..."
+            stop_dmp
+            sleep 2
+            start_dmp
+            check_dmp
+        else
+            echo_yellow "请记得手动重启DMP服务以使新端口生效"
+        fi
+    fi
+    
+    return 0
 }
 
 # 启动主程序
@@ -453,11 +527,12 @@ install_dst() {
     cd ~/dst/bin/ || {
         echo
         echo_red "======================================"
-        echo_red "✘ 无法进入服务器目录: ~/dst/bin/"
-        echo_red "✘ 请检查是否已正确安装饥荒服务器程序"
+        echo_red "✘ 服务器安装验证失败！"
+        echo_red "✘ 请重新安装！"
         echo_red "======================================"
         echo
-        exit 1 "服务器安装失败，请重新安装！"
+        cd "$HOME" #返回root根目录
+        exit 1
     }
 
     # 服务器安装验证通过后，执行MOD修复
@@ -477,9 +552,14 @@ install_dst() {
     else
         echo_red "=================================================="
         echo_red "✘ 服务器安装验证失败！"
+        echo_red "✘ 请重新安装！"
         echo_red "=================================================="
-        exit 1 "服务器安装失败，请重新安装！"
+        cd "$HOME" #返回root根目录
+        exit 1
     fi
+
+    # 无论成功还是失败，最后都返回root根目录
+    cd "$HOME"
     echo
 }
 
@@ -506,6 +586,7 @@ function show_menu() {
     echo_cyan "3. 停止DMP"
     echo_cyan "4. 安装饥荒服务器"
     echo_cyan "5. 更新饥荒服务器"
+    echo_cyan "6. 修改端口"
     echo_cyan "0. 退出脚本"
     
     echo
@@ -516,7 +597,7 @@ function show_menu() {
 function main_menu() {
     while true; do
         show_menu
-        read -p "请输入选择 [0-5]: " choice
+        read -p "请输入选择 [0-6]: " choice
         
         case $choice in
             1)
@@ -540,6 +621,10 @@ function main_menu() {
             5)
                 echo_cyan "执行: 更新DST服务器"
                 update_dst
+                ;;
+            6)
+                echo_cyan "执行: 修改端口"
+                change_port
                 ;;
             0)
                 echo_green "感谢使用，再见！"
@@ -578,9 +663,12 @@ else
         "update-dst")
             update_dst
             ;;
+        "change_port")
+            change_port
+            ;;
         *)
             echo_red "未知参数: $1"
-            echo_cyan "可用参数: install, start, stop, install-dst, update-dst"
+            echo_cyan "可用参数: install, start, stop, install-dst, update-dst, change_port"
             exit 1
             ;;
     esac
