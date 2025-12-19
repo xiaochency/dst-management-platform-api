@@ -487,11 +487,14 @@ install_dst() {
     echo_cyan "正在安装 Don't Starve Together 服务器..."
     sudo dpkg --add-architecture i386
     sudo apt-get update
-    apt install -y lib32gcc1     
-	apt install -y lib32gcc-s1
-    apt install -y libcurl4-gnutls-dev:i386
-    apt install -y screen
-	apt install -y unzip
+    sudo apt-get install -y libcurl4-gnutls-dev:i386
+    sudo apt-get install -y lib32gcc1
+    sudo apt-get install -y lib32stdc++6
+    sudo apt-get install -y libcurl4-gnutls-dev
+    sudo apt-get install -y libgcc1
+    sudo apt-get install -y libstdc++6
+    sudo apt-get install -y screen
+    sudo apt-get install -y unzip
     echo_green "环境依赖安装完毕"
 
     mkdir -p ~/.klei/DMP_BACKUP
@@ -542,8 +545,8 @@ install_dst() {
         echo_green "=================================================="
         
         echo_cyan "正在执行MOD修复..."
-        cp ~/steamcmd/linux32/libstdc++.so.6 ~/dst/bin/lib32/
-        cp ~/steamcmd/linux32/steamclient.so ~/dst/bin/lib32/
+        cp $HOME/steamcmd/linux32/steamclient.so $HOME/dst/bin/lib32/ 2>/dev/null
+        cp $HOME/steamcmd/linux64/steamclient.so $HOME/dst/bin64/lib64/ 2>/dev/null
         echo_green "MOD更新bug已修复"
         
         echo_green "=================================================="
@@ -569,7 +572,8 @@ update_dst() {
     cd "$steamcmd_dir" || exit 1
     ./steamcmd.sh +login anonymous +force_install_dir "$install_dir" +app_update 343050 validate +quit
     echo_green "服务器更新完成,请重新执行脚本"
-    cp ~/steamcmd/linux32/steamclient.so ~/dst/bin/lib32/
+    cp $HOME/steamcmd/linux32/steamclient.so $HOME/dst/bin/lib32/ 2>/dev/null
+    cp $HOME/steamcmd/linux64/steamclient.so $HOME/dst/bin64/lib64/ 2>/dev/null
     echo_green "MOD更新bug已修复"
 }
 

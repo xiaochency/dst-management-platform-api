@@ -1,5 +1,6 @@
-# 本项目为DMP的旧版本备份
+# 本项目为DMP的旧版本1.2.0备份
 原项目地址：https://github.com/miracleEverywhere/dst-management-platform-api
+原作者：@miracleEverywhere  https://github.com/miracleEverywhere
 ## :watermelon: 使用方法
 >**建议使用 Ubuntu 24系统，低版本系统可能会出现GLIBC版本报错**
 >**请在root用户下执行本脚本**
