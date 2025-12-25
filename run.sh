@@ -487,14 +487,7 @@ install_dst() {
     echo_cyan "正在安装 Don't Starve Together 服务器..."
     sudo dpkg --add-architecture i386
     sudo apt-get update
-    sudo apt-get install -y libcurl4-gnutls-dev:i386
-    sudo apt-get install -y lib32gcc1
-    sudo apt-get install -y lib32stdc++6
-    sudo apt-get install -y libcurl4-gnutls-dev
-    sudo apt-get install -y libgcc1
-    sudo apt-get install -y libstdc++6
-    sudo apt-get install -y screen
-    sudo apt-get install -y unzip
+    sudo apt-get install -y lib32gcc-s1 libcurl4-gnutls-dev:i386 screen unzip
     echo_green "环境依赖安装完毕"
 
     mkdir -p ~/.klei/DMP_BACKUP
@@ -547,6 +540,7 @@ install_dst() {
         echo_cyan "正在执行MOD修复..."
         cp $HOME/steamcmd/linux32/steamclient.so $HOME/dst/bin/lib32/ 2>/dev/null
         cp $HOME/steamcmd/linux64/steamclient.so $HOME/dst/bin64/lib64/ 2>/dev/null
+        cp $HOME/steamcmd/linux32/libstdc++.so.6 $HOME/dst/bin/lib32/ 2>/dev/null
         echo_green "MOD更新bug已修复"
         
         echo_green "=================================================="
@@ -574,6 +568,7 @@ update_dst() {
     echo_green "服务器更新完成,请重新执行脚本"
     cp $HOME/steamcmd/linux32/steamclient.so $HOME/dst/bin/lib32/ 2>/dev/null
     cp $HOME/steamcmd/linux64/steamclient.so $HOME/dst/bin64/lib64/ 2>/dev/null
+    cp $HOME/steamcmd/linux32/libstdc++.so.6 $HOME/dst/bin/lib32/ 2>/dev/null
     echo_green "MOD更新bug已修复"
 }
 
