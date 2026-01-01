@@ -242,9 +242,9 @@ function download() {
 # 安装主程序
 function install_dmp() {
     local download_urls=(
-        "https://gh.llkk.cc/https://github.com/xiaochency/dst-management-platform-api/raw/refs/heads/main/dmp"
-        "https://github.dpik.top/https://github.com/xiaochency/dst-management-platform-api/raw/refs/heads/main/dmp"
-        "https://ghfast.top/https://github.com/xiaochency/dst-management-platform-api/raw/refs/heads/main/dmp"
+        "https://gh.llkk.cc/https://github.com/xiaochency/DMP1.2/raw/refs/heads/main/dmp"
+        "https://github.dpik.top/https://github.com/xiaochency/DMP1.2/raw/refs/heads/main/dmp"
+        "https://ghfast.top/https://github.com/xiaochency/DMP1.2/raw/refs/heads/main/dmp"
     )
     
     local mirror_names=(
